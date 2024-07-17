@@ -3,20 +3,18 @@ package core;
 import deck.*;
 import piles.*;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static core.Constants.*;
 
-public class Game {
+public class GameJava {
     private int score;
     private int moves;
-    private Table table;
+    private final Table table;
     private boolean gameOver;
-    private Scanner in = new Scanner(System.in);
+    private final Scanner in = new Scanner(System.in);
 
-    public Game(){
+    public GameJava(){
         score=0;
         moves=0;
         gameOver=false;
@@ -52,7 +50,8 @@ public class Game {
                     Table.moveCards(i,from,to);
                     updateScore(i, from, to, checkScore);
                     moves++;
-                    i = from.getSize();
+                    break;
+                    //i = from.getSize();
                 }catch (InvalidMoveException ignored){
                     if(i == from.getSize()){
                         throw new InvalidMoveException();
@@ -103,8 +102,7 @@ public class Game {
             if(movedCard.getRank() == Rank.KING){
                 isValid=false;
             }
-        }
-        else if (previousToTopCard!=null && newFromTopCard!= null){
+        } else if (previousToTopCard!=null && newFromTopCard!= null){
             if((newFromTopCard.getRank() == previousToTopCard.getRank() &&
                     newFromTopCard.getColor() == previousToTopCard.getColor()) &&
                     !newFromTopCard.isCovered()){
@@ -166,18 +164,10 @@ public class Game {
         }
     }
 
-
-
     public boolean isGameOver() {
-        boolean[] completedPiles= {false,false,false,false};
-        int i=0;
-        for(Suit suit : Suit.values()){
-            if(table.getSuitPile(suit).getSize()==13){
-                completedPiles[i]=true;
-            }
-            i++;
-        }
-        if(completedPiles[0] && completedPiles[1] && completedPiles[2] && completedPiles[3]){
+        var completedPiles = new HashMap<Suit, Boolean>();
+        Arrays.stream(Suit.values()).forEach(suit -> completedPiles.put(suit, table.getSuitPile(suit).getSize()==13));
+        if(completedPiles.values().stream().allMatch(pile -> pile)){
             gameOver=true;
         }
         return gameOver;

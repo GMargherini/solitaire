@@ -1,13 +1,13 @@
-import core.Game;
+import core.GameJava;
 
 import static core.Constants.WHITE_TEXT;
 
-public class Main {
+public class MainJava {
     public static void main(String[] args){
-        Game game = new Game();
+        GameJava game = new GameJava();
 
         while (!game.isGameOver()){
-            Game.clearScreen();
+            GameJava.clearScreen();
             System.out.println(WHITE_TEXT +"score: " + game.getScore() + "\tmoves:" + game.getMoves());
             game.getTable().printTable();
             String nextMove = game.readCommand();
@@ -15,7 +15,7 @@ public class Main {
                 game.parseMove(nextMove);
             }
         }
-        Game.clearScreen();
+        GameJava.clearScreen();
         System.out.println(WHITE_TEXT +"Game Over\nscore: " + game.getScore() + " moves:" + game.getMoves());
 
     }

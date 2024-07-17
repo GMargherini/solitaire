@@ -1,6 +1,5 @@
 package piles;
 
-import deck.Card;
 import core.InvalidMoveException;
 
 import java.util.Iterator;

@@ -1,11 +1,9 @@
-import core.Game;
+import core.GameJava;
 import core.Table;
 import deck.*;
-import piles.Lane;
 import core.InvalidMoveException;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import piles.SuitPile;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +30,12 @@ public class MovesTest {
     @Test
     public void inputTest(){
         // if the method returns an empty string it means the command is not valid
-        assert Game.readCommand("c").isEmpty();
-        assert Game.readCommand("12c").isEmpty();
-        assert Game.readCommand("232").equals("232");
-        assert Game.readCommand("5c").equals("5C");
-        assert Game.readCommand("q").equals("Q");
-        assert Game.readCommand("d").equals("D");
+        assert GameJava.readCommand("c").isEmpty();
+        assert GameJava.readCommand("12c").isEmpty();
+        assert GameJava.readCommand("232").equals("232");
+        assert GameJava.readCommand("5c").equals("5C");
+        assert GameJava.readCommand("q").equals("Q");
+        assert GameJava.readCommand("d").equals("D");
     }
 
     @Test
@@ -55,7 +53,7 @@ public class MovesTest {
         * moving a card from one lane to another with a card with an equal rank
         * does not increase the score
         * */
-        assert !Game.checkScore(1,lane1,lane2);
+        assert !GameJava.checkScore(1,lane1,lane2);
         Table.moveCard(lane1,lane2);
     }
 
@@ -75,7 +73,7 @@ public class MovesTest {
          * moving a card from one lane to another with a card with an equal rank
          * increases the score if the first is covered
          * */
-        assert Game.checkScore(1,lane1,lane2);
+        assert GameJava.checkScore(1,lane1,lane2);
         Table.moveCard(lane1,lane2);
     }
 
@@ -91,7 +89,7 @@ public class MovesTest {
          * moving cards between empty lanes
          * does not increase the score
          * */
-        assert !Game.checkScore(2,lane1, lane2);
+        assert !GameJava.checkScore(2,lane1, lane2);
         Table.moveCards(2,lane1,lane2);
     }
 
@@ -107,7 +105,7 @@ public class MovesTest {
          * moving a card from one lane to another
          * increases the score
          * */
-        assert Game.checkScore(1,lane1,lane2);
+        assert GameJava.checkScore(1,lane1,lane2);
         Table.moveCard(lane1,lane2);
     }
 

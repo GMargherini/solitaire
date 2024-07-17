@@ -1,9 +1,5 @@
 package piles;
 
-import deck.Card;
-import deck.Rank;
-import deck.Suit;
-
 public class SuitPile extends Pile{
     private Suit suit;
     public SuitPile(Suit suit){

@@ -1,8 +1,5 @@
 package piles;
 
-import deck.Card;
-import deck.Rank;
-
 import java.util.List;
 
 public class Lane extends Pile implements Iterable<Card>{

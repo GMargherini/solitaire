@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Deck {
     private List<Card> cards;
-    private Random random;
+    private final Random random;
 
     public Deck(){
         random = new Random();

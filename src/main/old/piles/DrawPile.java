@@ -1,6 +1,5 @@
 package piles;
 
-import deck.Card;
 import java.util.List;
 
 public class DrawPile extends Pile{
