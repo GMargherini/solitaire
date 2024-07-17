@@ -1,6 +1,0 @@
-piles/DrawPile.class
-piles/SuitPile.class
-piles/UncoverdPile.class
-piles/Pile.class
-piles/Lane.class
-core/InvalidMoveException.class
