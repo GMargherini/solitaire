@@ -14,7 +14,9 @@ object Table {
     to.addCard(card)
     from.removeCard(card)
     from.getTopCard match
-      case Some(topCard) => if (topCard.covered) from.flipTopCard()
+      case Some(topCard) => from match
+        case _:DrawPile =>
+        case _ => if (topCard.covered) from.flipTopCard()
       case None =>
   }
 
@@ -52,8 +54,8 @@ object Table {
 
 class Table {
   val deck = new Deck
-  var suitPiles: Map[Suit, SuitPile] = Map[Suit,SuitPile]()
-  var lanes: Seq[Lane] = Vector[Lane]()
+  private var suitPiles: Map[Suit, SuitPile] = Map[Suit,SuitPile]()
+  private var lanes: Seq[Lane] = Vector[Lane]()
   for (i <- 1 to 7) {
     lanes = lanes :+ new Lane(deck.getCards(i))
   }
@@ -65,7 +67,7 @@ class Table {
     suitPiles = suitPiles + (suit -> new SuitPile(suit))
   }
 
-  var drawPile: DrawPile = new DrawPile(deck.getCards(deck.getDeckSize))
+  private var drawPile: DrawPile = new DrawPile(deck.getCards(deck.getDeckSize))
   var uncoveredPile: UncoveredPile = new UncoveredPile
 
   def printTable(): Unit = {

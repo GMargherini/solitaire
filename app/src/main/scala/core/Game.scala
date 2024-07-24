@@ -17,8 +17,8 @@ object Game {
   }
   def readCommand(move: String)(el: String =>String): String = {
     var mv = move
-    if (move.length >= 3 && move.substring(2).matches("[0-9]{1,2}")) mv = move.substring(0, 2)
-    if (!move.matches("[CDHPScdhps1-7]{2}") & !move.matches("[DQdq]")) {
+    if (move.length >= 3 && move.substring(2).matches("[0-9]{1,2}")) mv = move.substring(0, 3)
+    else if (!move.matches("[CDHPScdhps1-7]{2}") & !move.matches("[DQdq]")) {
       el("Invalid Command, press enter to continue")
       mv = ""
     }
@@ -57,7 +57,6 @@ object Game {
 class Game {
   var score = 0
   var moves = 0
-  var gameOver = false
   var table = new Table
 
   private def move(number: Int, input: String): Unit = {
@@ -80,7 +79,7 @@ class Game {
     }
   }
 
-  def autoMove(from: Pile, to: Pile): Unit = {
+  private def autoMove(from: Pile, to: Pile): Unit = {
     try{
       breakable {
         for (i <- 1 to from.getSize) {
@@ -117,6 +116,7 @@ class Game {
       case _: Lane =>
         from match {
           case _:Lane => if(isValid) score += (5 * number)
+          case _ =>
         }
     }
   }
@@ -147,22 +147,20 @@ class Game {
         case '5' => table.getLane(4)
         case '6' => table.getLane(5)
         case '7' => table.getLane(6)
+        case _ => null
       })
     }
     piles match
-      case head :: tail => head match
-        case from: Lane =>
-          tail.head match
-            case to: Lane => if (number == 1) autoMove(from, to) else this.move(number, from, to, move)
-            case to: Pile => this.move(number, from, to, move)
-        case from: Pile => this.move(number, from, tail.head, move)
-      case Nil => this.move(number, move)
+      case first :: second :: tail => (first, second) match
+        case (from:Lane, to: Lane) => if (number == 1) autoMove(from, to) else this.move(number, from, to, move)
+        case (from:Lane, to:Pile) => this.move(number, from, to, move)
+        case (from:Pile, to:Pile) => this.move(number, from, to, move)
+      case _ => this.move(number, move)
   }
 
-  def isGameOver: Boolean = {
-    val completedPiles =  Map[Suit, Boolean]()
-    Suit.values.foreach(suit => completedPiles + ((suit, table.getSuitPile(suit).getSize == 13)))
-    if (!completedPiles.values.forall(y => y)) gameOver = true
-    gameOver
+  def gameOver: Boolean = {
+    var completedPiles = Map[Suit, Boolean]()
+    Suit.values.foreach(suit => completedPiles = completedPiles + ((suit, table.getSuitPile(suit).getSize == 13)))
+    completedPiles.values.fold(true)((x,y) => x & y)
   }
 }

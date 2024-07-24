@@ -46,6 +46,7 @@ abstract class Pile extends Iterable[Card] {
   def flipTopCard(): Unit = {
     getTopCard match
       case Some(topCard) => topCard.flip()
+      case None =>
   }
 
   def getSize: Int = cards.size

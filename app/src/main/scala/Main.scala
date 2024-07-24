@@ -3,7 +3,7 @@ import core.Game
 
 @main def main(): Unit = {
   val game = new Game
-  while (!game.isGameOver) {
+  while (!game.gameOver) {
     Game.clearScreen()
     System.out.println(WHITE_TEXT + "score: " + game.score + "\tmoves:" + game.moves)
     game.table.printTable()
