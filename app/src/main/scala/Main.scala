@@ -1,15 +1,14 @@
-import core.Constants.WHITE_TEXT
-import core.Game
+import core.{Game, Input, Output}
 
 @main def main(): Unit = {
-  val game = new Game
-  while (!game.gameOver) {
-    Game.clearScreen()
-    System.out.println(WHITE_TEXT + "score: " + game.score + "\tmoves:" + game.moves)
-    game.table.printTable()
-    val nextMove = Game.readCommand
-    if (nextMove.nonEmpty) game.parseMove(nextMove)
-  }
-  Game.clearScreen()
-  System.out.println(WHITE_TEXT + "Game Over\nscore: " + game.table + " moves:" + game.moves)
+	val game = new Game
+	while (!game.gameOver) {
+		Output.clearScreen()
+		Output.printWhite("score: " + game.score + "\tmoves:" + game.moves + "\n")
+		Output.printTable(game.table)
+		val nextMove = Input.readCommand
+		if (nextMove.nonEmpty) game.parseMove(nextMove)
+	}
+	Output.clearScreen()
+	Output.printWhite("Game Over\nscore: " + game.score + " moves:" + game.moves + "\n")
 }

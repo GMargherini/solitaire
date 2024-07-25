@@ -1,16 +1,17 @@
 package deck
 
-import core.Constants.*
 import deck.Suit.*
+import core.Output.{RED_TEXT, WHITE_TEXT}
+import deck.Rank.KING
 
 class Card(val rank: Rank, val suit: Suit) {
   val color: Color = suit match
     case DIAMONDS | HEARTS => Color.RED
-    case _ => Color.BLACK
+    case CLUBS | SPADES => Color.BLACK
 
   var covered = true
 
-  def nextRank: Rank = Rank.values(rank.ordinal + 1)
+  private def nextRank: Rank =  Rank.values(rank.ordinal + 1)
 
   override def toString: String = {
     var string: String = null

@@ -1,74 +1,75 @@
 package piles
 
-import core.Constants.WHITE_TEXT
-import core.InvalidMoveException
+import core.Output.WHITE_TEXT
 import deck.Card
 
 
 abstract class Pile extends Iterable[Card] {
-  protected var cards: Seq[Card] = Vector()
+	protected var cards: Seq[Card] = Vector()
 
-  def this(cards: Seq[Card]) = {
-    this()
-    this.cards = cards
-  }
+	def this(cards: Seq[Card]) = {
+		this()
+		this.cards = cards
+	}
 
-  def getTopCard: Option[Card] = {
-    cards.lastOption
-  }
+	def getTopCard: Option[Card] = {
+		cards.lastOption
+	}
 
-  @throws[InvalidMoveException]
-  def addCard(card: Card): Unit = {
-    if (this.isCardValid(card)) cards = cards :+ card
-    else throw new InvalidMoveException
-  }
+	def addCard(card: Card): Unit = {
+		if (isCardValid(card)) cards = cards :+ card
+	}
+	def getCards(number: Int):Seq[Card] = {
+		var cards = this.cards
+		var res = Vector[Card]()
+		for(i <- 0 until number){
+			res = res.+:(cards.last)
+			cards = cards.dropRight(1)
+		}
+		res
+	}
+	def getAllCards:Seq[Card] = cards
+	def canAdd(card: Card): Boolean = {
+		isCardValid(card) & !card.covered
+	}
 
-  @throws[InvalidMoveException]
-  def removeCard(card: Card): Unit = {
-    if (!cards.filter(c => c eq card).contains(card)) throw new InvalidMoveException
-    cards = cards.filter(c => !(c eq card))
-  }
+	def removeCard(card: Card): Unit = {
+		cards = cards.filter(c => !(c eq card))
+	}
+	def canRemove(card: Card): Boolean = {
+		cards.filter(c => c eq card).contains(card) & !card.covered
+	}
 
-  @throws[InvalidMoveException]
-  def addCards(cards: Seq[Card]): Unit = {
-    for (card <- cards) {
-      this.addCard(card)
-    }
-  }
+	private def addCards(cards: Seq[Card]): Unit = {
+		cards foreach (card => if canAdd(card) then addCard(card))
+	}
 
-  @throws[InvalidMoveException]
-  def removeCards(cards: Seq[Card]): Unit = {
-    for (card <- cards) {
-      this.removeCard(card)
-    }
-  }
+	private def removeCards(cards: Seq[Card]): Unit = {
+		cards foreach (card => if canRemove(card) then removeCard(card))
+	}
 
-  def flipTopCard(): Unit = {
-    getTopCard match
-      case Some(topCard) => topCard.flip()
-      case None =>
-  }
+	def flipTopCard(): Unit = {
+		getTopCard match
+			case Some(topCard) => topCard.flip()
+			case None =>
+	}
 
-  def getSize: Int = cards.size
+	def getSize: Int = cards.size
 
-  override def toString: String = {
-    getTopCard match
-      case Some(topCard) => topCard.toString
-      case None => WHITE_TEXT + "░░░"
-  }
+	override def toString: String = {
+		getTopCard match
+			case Some(topCard) => topCard.toString
+			case None => WHITE_TEXT + "░░░"
+	}
 
-  def getCard(position: Int): Option[Card] = {
-    try Some(cards(position))
-    catch {
-      case e: IndexOutOfBoundsException =>
-        None
-    }
-  }
+	def getCard(position: Int): Option[Card] = {
+		if (1 to cards.size) contains (position + 1) then Some(cards(position)) else None
+	}
 
-  override def isEmpty: Boolean = cards.isEmpty
+	override def isEmpty: Boolean = cards.isEmpty
 
-  def isCardValid(card: Card): Boolean
+	def isCardValid(card: Card): Boolean
 
-  override def iterator: Iterator[Card] = cards.iterator
+	override def iterator: Iterator[Card] = cards.iterator
 
 }

@@ -5,17 +5,12 @@ import java.util.Random
 
 
 class Deck {
-  val random = new Random()
+  private val random = new Random()
   var cards: Seq[Card] = Vector[Card]()
 
-  for (suit <- Suit.values) {
-    for (rank <- Rank.values) {
-      val newCard = new Card(rank, suit)
-      cards = cards :+ newCard
-    }
-  }
+  cards = Suit.values.flatMap(suit => Rank.values.filterNot(Rank.EMPTY.==).map(rank => new Card(rank, suit))).toVector
 
-  def pickRandomCard: Card = {
+  private def pickRandomCard: Card = {
     val index = random.nextInt(cards.size)
     val card = cards(index)
     cards = cards filterNot card.==
@@ -23,11 +18,7 @@ class Deck {
   }
 
   def getCards(numberOfCards: Int): Seq[Card] = {
-    var cards = Vector[Card]()
-    for (i <- 0 until numberOfCards) {
-      cards = cards :+ pickRandomCard
-    }
-    cards
+    ((0 until numberOfCards) map (_ => pickRandomCard)).toVector
   }
 
   def getDeckSize: Int = cards.size
