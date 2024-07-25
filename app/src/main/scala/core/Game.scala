@@ -8,21 +8,19 @@ import piles.*
 
 object Game {
 	def isMoveValid(number: Int, from: Pile, to: Pile): Boolean = {
-		var isValid = true
 		if(number == 0) return false
 		val movedCard = from.getCard(from.getSize - number)
-		isValid = movedCard match
+		movedCard match
 			case Some(card) => to.canAdd(card)
 			case None => true
-		isValid
 	}
 
 	def updateScore(score: Int, number: Int, from: Pile, to: Pile, wasCovered: Boolean): Int = {
 		(from,to) match
 			case (_:Lane, _:SuitPile) => score + 20
-			case (_: UncoveredPile, _: SuitPile) => score + 10
-			case (_, _: SuitPile) => score
-			case (_: Lane, _: Lane) =>
+			case (_:UncoveredPile, _:SuitPile) => score + 10
+			case (_, _:SuitPile) => score
+			case (_:Lane, _:Lane) =>
 				to.getCard(to.getSize - number) match
 					case Some(card) =>
 						if (to.getSize - number == 0) & !(card.rank eq Rank.KING) then score + 5
@@ -35,7 +33,7 @@ object Game {
 								case (None, _) | (_, None) => if !(card.rank eq Rank.KING) then score + 5 else score
 						}
 					case None => score + 5
-			case (_, _: Lane) => score
+			case (_, _:Lane) => score
 	}
 
 }
@@ -53,15 +51,14 @@ class Game {
 				sys.exit(0)
 			case _ => Input.handleError()
 	}
-	private def move(number: Int, from: Pile, to: Pile, input: String): Unit = {
-		val isValid = Game.isMoveValid(number, from, to)
+	private def move(number: Int, from: Pile, to: Pile): Unit = {
 		if !execute(from, to, number) then Input.handleError()
 	}
 
 	private def autoMove(from: Pile, to: Pile): Unit = {
 		val isValid = (1 to from.getSize) map (i => isMoveValid(i, from, to))
 		val n = if isValid.contains(true) then isValid.indexOf(true) + 1 else 0
-		if !execute(from,to,n) then Input.handleError()
+		move(n, from, to)
 	}
 
 	private def execute(from: Pile, to: Pile, number: Int): Boolean = {
@@ -107,13 +104,13 @@ class Game {
 		}
 		piles match
 			case first :: second :: tail => (first, second) match
-				case (from:Lane, to: Lane) => if (number == 1) autoMove(from, to) else this.move(number, from, to, move)
-				case (from:Lane, to:Pile) => this.move(number, from, to, move)
-				case (from:Pile, to:Pile) => this.move(number, from, to, move)
+				case (from:Lane, to: Lane) => if (number == 1) autoMove(from, to) else this.move(number, from, to)
+				case (from:Lane, to:Pile) => this.move(number, from, to)
+				case (from:Pile, to:Pile) => this.move(number, from, to)
 			case _ => this.move(number, move)
 	}
 
 	def gameOver: Boolean = {
-		Suit.values.map(suit => table.getSuitPile(suit).getSize == 13).fold(true)((x,y) => x & y)
+		table.suitPiles.values.map(pile => pile.getSize == 13).fold(true)((x,y) => x & y)
 	}
 }

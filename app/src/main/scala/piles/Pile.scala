@@ -20,13 +20,7 @@ abstract class Pile extends Iterable[Card] {
 		if (isCardValid(card)) cards = cards :+ card
 	}
 	def getCards(number: Int):Seq[Card] = {
-		var cards = this.cards
-		var res = Vector[Card]()
-		for(i <- 0 until number){
-			res = res.+:(cards.last)
-			cards = cards.dropRight(1)
-		}
-		res
+		cards.takeRight(number)
 	}
 	def getAllCards:Seq[Card] = cards
 	def canAdd(card: Card): Boolean = {

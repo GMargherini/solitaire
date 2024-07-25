@@ -1,7 +1,5 @@
 package core
 
-import deck.Suit
-
 import scala.Console.{WHITE, in, out}
 import scala.io.AnsiColor.RED
 
@@ -15,30 +13,21 @@ object Output {
 		//print labels
 		out.println(WHITE_TEXT + "     P \t     C   D   H   S")
 		out.print("" + table.drawPile + " " + table.uncoveredPile + "\t    ")
-		for (suit <- Suit.values) {
-			out.print("" +
-				(table.suitPiles.get(suit) match
-					case Some(x) => x
-					case None => "   ")
-				+ " ")
-		}
+		table.suitPiles foreach (pair => out.print("" + pair._2 + " "))
+
 		out.print("\n\n ")
 		//print lane labels
-		for (i <- table.lanes.indices) {
-			out.print(WHITE_TEXT + (i + 1) + "   ")
-		}
+		table.lanes.indices foreach (i=>out.print(WHITE_TEXT + (i + 1) + "   "))
 		out.println()
 		//print lanes
-		for (i <- 0 until lines) {
-			for (lane <- table.lanes) {
-				out.print("" +
-					(lane.getCard(i) match
-						case Some(c) => c
-						case None => "   ")
-					+ " ")
-			}
+		(0 until lines).foreach(i => {
+			table.lanes.foreach(lane => out.print("" +
+				(lane.getCard(i) match
+					case Some(c) => c
+					case None => "   ")
+				+ " "))
 			out.println()
-		}
+		})
 	}
 
 	def printWhite(string: String): Unit = {
@@ -58,26 +47,33 @@ object Output {
 object Input{
 	def readCommand: String = {
 		Output.printWhite("Enter move> ")
-		val move = in.readLine()
-		readCommand(move)(handleError)
+		val command = in.readLine()
+		checkCommand(command)(handleError)
 	}
 
-	def readCommand(move: String)(el: String => String): String = {
-		var mv = move
-		if (move.length >= 3 && move.substring(2).matches("[0-9]{1,2}")) mv = move.substring(0, 3)
-		else if (!move.matches("[CDHPScdhps1-7]{2}") & !move.matches("[DQdq]")) {
-			el("Invalid Command, press enter to continue")
-			mv = ""
-		}
-		mv.toUpperCase
+	def checkCommand(command: String)(el: String => String): String = {
+		val one = "([DQdq])".r
+		val two = "([CDHPScdhps1-7]{2})".r
+		val more = "([0-9]{1,2})".r
+		val errorMessage = "Invalid Command, press enter to continue"
+
+		(command.length match
+			case 1 | 2 => command match
+				case one(c) => c
+				case two(c) => c
+				case _ => el(errorMessage)
+			case 3 | 4 => command.substring(2) match
+				case more(c) => command.substring(0, 3)
+				case _ => el(errorMessage)
+			case _ => el(errorMessage)).toUpperCase
 	}
 
 	def handleError(message: String): String = {
 		Output.printRed(message)
 		in.readLine()
+		""
 	}
 	def handleError():String = {
-		Output.printRed("Illegal move, press enter to continue")
-		in.readLine()
+		handleError("Illegal move, press enter to continue")
 	}
 }

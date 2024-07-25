@@ -14,14 +14,14 @@ class MovesTest extends AnyFunSuite with Matchers {
 
 	test ("input test") {
 		def error(m:String) : String = {
-			m
+			""
 		}
-		assert(Input.readCommand("c")(error).isEmpty)
-		assert(Input.readCommand("12c")(error).isEmpty)
-		assert(Input.readCommand("232")(error).equals("232"))
-		assert(Input.readCommand("5c")(error).equals("5C"))
-		assert(Input.readCommand("q")(error).equals("Q"))
-		assert(Input.readCommand("d")(error).equals("D"))
+		assert(Input.checkCommand("c")(error).isEmpty)
+		assert(Input.checkCommand("12c")(error).isEmpty)
+		assert(Input.checkCommand("232")(error).equals("232"))
+		assert(Input.checkCommand("5c")(error).equals("5C"))
+		assert(Input.checkCommand("q")(error).equals("Q"))
+		assert(Input.checkCommand("d")(error).equals("D"))
 	}
 
 	test("moveOneNoScoreTest") {
@@ -42,7 +42,7 @@ class MovesTest extends AnyFunSuite with Matchers {
 				* does not increase the score
 				* */
 		assert(Game.isMoveValid(1, lane1, lane2))
-		lane1 moveCardTo lane2
+		Table.moveCards(lane1, lane2, 1)
 		assert(Game.updateScore(0,1,lane1,lane2,false)==0)
 
 	}
@@ -62,7 +62,7 @@ class MovesTest extends AnyFunSuite with Matchers {
 				 * increases the score if the first is covered
 				 * */
 		assert(Game.isMoveValid(1, lane1, lane2))
-		lane1 moveCardTo lane2
+		Table.moveCards(lane1, lane2, 1)
 		assert(Game.updateScore(0,1,lane1,lane2,true)==5)
 
 	}
@@ -79,7 +79,7 @@ class MovesTest extends AnyFunSuite with Matchers {
 				 * does not increase the score
 				 * */
 		assert(Game.isMoveValid(2, lane1, lane2))
-		lane1.moveCardsTo(lane2,2)
+		Table.moveCards(lane1, lane2, 2)
 		assert(Game.updateScore(0,2,lane1,lane2,false)==0)
 
 	}
@@ -96,7 +96,7 @@ class MovesTest extends AnyFunSuite with Matchers {
 				 * increases the score
 				 * */
 		assert(Game.isMoveValid(1, lane1, lane2))
-		lane1 moveCardTo lane2
+		Table.moveCards(lane1, lane2, 1)
 	}
 
 	test("addToLaneTest") {
