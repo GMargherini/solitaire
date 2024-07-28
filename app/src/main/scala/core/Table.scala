@@ -35,13 +35,11 @@ object Table {
 	}
 
 	def wasCovered(number: Int, from: Pile, to: Pile): Boolean = {
-		var isValid = true
-		val previousFromTopCard = from.getCard(from.getSize - number-1)
+		val previousFromTopCard = from.getCard(from.size - number-1)
 
-		isValid = previousFromTopCard match
+		previousFromTopCard match
 			case Some(card) => card.covered
 			case None => false
-		isValid
 	}
 }
 

@@ -48,7 +48,7 @@ abstract class Pile extends Iterable[Card] {
 			case None =>
 	}
 
-	def getSize: Int = cards.size
+	override def size: Int = cards.size
 
 	override def toString: String = {
 		getTopCard match

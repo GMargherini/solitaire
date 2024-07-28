@@ -9,11 +9,11 @@ object Output {
 	def printTable(table: Table): Unit = {
 		var lines = 0
 		//find the longest lane
-		lines = table.lanes.max((l1, l2) => l1.getSize.compareTo(l2.getSize)).getSize
+		lines = table.lanes.max((l1, l2) => l1.size.compareTo(l2.size)).size
 		//print labels
 		out.println(WHITE_TEXT + "     P \t     C   D   H   S")
-		out.print("" + table.drawPile + " " + table.uncoveredPile + "\t    ")
-		table.suitPiles foreach (pair => out.print("" + pair._2 + " "))
+		out.print(s"${table.drawPile} ${table.uncoveredPile}\t    ")
+		table.suitPiles foreach ((_, pile) => out.print(s"$pile "))
 
 		out.print("\n\n ")
 		//print lane labels
@@ -42,6 +42,25 @@ object Output {
 		System.out.print("\u001b[H\u001b[2J")
 		System.out.flush()
 	}
+	def printHistory(history: History): String = {
+		clearScreen()
+		out.println(history)
+		Input.handleError("Press enter to continue")
+	}
+	def printHelp(): Unit = {
+		clearScreen()
+		out.println("""
+		  | H					Print help
+		  | Q					Quit game
+		  | L					Print move history
+		  | [Pile1][Pile2]		Automatically move cards from Pile1 to Pile2
+		  | [Pile1][Pile2][n]	Move n cards from Pile1 to Pile2
+		  | D					Draw a card from the uncovered pile
+		  |
+		  | Pile can be any between 1-7,P,C,D,H,S
+		  |""".stripMargin)
+		Input.handleError("Press enter to continue")
+	}
 }
 
 object Input{
@@ -52,7 +71,7 @@ object Input{
 	}
 
 	def checkCommand(command: String)(el: String => String): String = {
-		val one = "([DQdq])".r
+		val one = "([DHLQdhlq])".r
 		val two = "([CDHPScdhps1-7]{2})".r
 		val more = "([0-9]{1,2})".r
 		val errorMessage = "Invalid Command, press enter to continue"
