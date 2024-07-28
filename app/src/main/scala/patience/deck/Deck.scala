@@ -1,4 +1,4 @@
-package deck
+package patience.deck
 
 import java.util
 import java.util.Random

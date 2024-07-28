@@ -1,6 +1,6 @@
-package piles
+package patience.piles
 
-import deck.{Card, Rank}
+import patience.deck.{Card, Rank}
 
 
 class Lane(cards: Seq[Card]) extends Pile(cards) with Iterable[Card] {

@@ -1,7 +1,7 @@
-package piles
+package patience.piles
 
-import core.Output.WHITE_TEXT
-import deck.Card
+import patience.core.Output.WHITE_TEXT
+import patience.deck.Card
 
 
 abstract class Pile extends Iterable[Card] {

@@ -1,9 +1,6 @@
-package piles
+package patience.piles
 
-import deck.Card
-import deck.Rank
-import deck.Suit
-
+import patience.deck.{Card, Rank, Suit}
 
 class SuitPile(val suit: Suit) extends Pile {
   def isCardValid(card: Card): Boolean = {

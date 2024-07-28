@@ -1,9 +1,9 @@
-package core
+package patience.core
 
-import core.Game.{isMoveValid, updateScore}
-import core.Table.{moveCard, moveCards}
-import deck.*
-import piles.*
+import patience.core.Game.{isMoveValid, updateScore}
+import patience.core.Table.{moveCard, moveCards}
+import patience.deck.*
+import patience.piles.*
 
 
 object Game {

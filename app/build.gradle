@@ -17,11 +17,14 @@ repositories {
      mavenCentral()
 }
 application {
-     mainClass = 'patience.main.Main'
+     mainClass = 'patience.Main'
 }
 jar {
      manifest {
           attributes 'Main-Class': application.mainClass
+     }
+     from {
+          configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
      }
 }
 

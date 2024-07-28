@@ -1,10 +1,10 @@
-import core.{Game, Input, Table}
-import deck.*
-import deck.Rank.KING
-import deck.Suit.{DIAMONDS, HEARTS}
+import patience.core.{Game, Input, Table}
+import patience.deck.*
+import patience.deck.Rank.KING
+import patience.deck.Suit.{DIAMONDS, HEARTS}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import piles.{Lane, SuitPile}
+import patience.piles.{Lane, SuitPile}
 
 class MovesTest extends AnyFunSuite with Matchers {
 	private var kd = new Card(Rank.KING, Suit.DIAMONDS)

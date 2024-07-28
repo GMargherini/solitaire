@@ -1,6 +1,6 @@
-package piles
+package patience.piles
 
-import deck.Card
+import patience.deck.Card
 
 
 class UncoveredPile extends Pile {

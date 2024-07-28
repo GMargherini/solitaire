@@ -1,9 +1,9 @@
-package core
+package patience.core
 
-import core.Input.handleError
-import core.Table.{moveCard, moveCards}
-import deck.*
-import piles.*
+import patience.core.Input.handleError
+import patience.core.Table.{moveCard, moveCards}
+import patience.deck.*
+import patience.piles.*
 
 
 object Table {

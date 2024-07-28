@@ -1,4 +1,4 @@
-package core
+package patience.core
 
 import scala.Console.{WHITE, in, out}
 import scala.io.AnsiColor.RED
@@ -11,21 +11,21 @@ object Output {
 		//find the longest lane
 		lines = table.lanes.max((l1, l2) => l1.size.compareTo(l2.size)).size
 		//print labels
-		out.println(WHITE_TEXT + "     P \t     C   D   H   S")
-		out.print(s"${table.drawPile} ${table.uncoveredPile}\t    ")
-		table.suitPiles foreach ((_, pile) => out.print(s"$pile "))
+		out.println(WHITE_TEXT + "\t P\t\t C\t D\t H\t S")
+		out.print(s"${table.drawPile}\t${table.uncoveredPile}\t\t")
+		table.suitPiles foreach ((_, pile) => out.print(s"$pile\t"))
 
 		out.print("\n\n ")
 		//print lane labels
-		table.lanes.indices foreach (i=>out.print(WHITE_TEXT + (i + 1) + "   "))
+		table.lanes.indices foreach (i=>out.print(WHITE_TEXT + (i + 1) + "\t "))
 		out.println()
 		//print lanes
 		(0 until lines).foreach(i => {
 			table.lanes.foreach(lane => out.print("" +
 				(lane.getCard(i) match
-					case Some(c) => c
-					case None => "   ")
-				+ " "))
+					case Some(c) => s"$c\t"
+					case None => "\t")
+				+ ""))
 			out.println()
 		})
 	}

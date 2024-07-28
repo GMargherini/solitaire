@@ -1,4 +1,4 @@
-package core
+package patience.core
 
 import scala.collection.immutable.ListMap
 
