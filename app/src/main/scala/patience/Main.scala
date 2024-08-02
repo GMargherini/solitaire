@@ -17,7 +17,7 @@ object Main {
 			Output.printWhite(game.toString)
 			Output.printTable(game.table)
 			val nextMove = Input.readCommand
-			if (nextMove.nonEmpty) game.parseMove(nextMove)
+			if (nextMove.nonEmpty) game.runMove(nextMove)
 			round(game)
 		}
 	}

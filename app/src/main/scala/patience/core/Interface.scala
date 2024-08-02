@@ -68,7 +68,7 @@ object Input{
 	}
 
 	def checkCommand(command: String)(er: String => String): String = {
-		val one = "([DHLQdhlq])".r
+		val one = "([DHLQUdhlqu])".r
 		val two = "([CDHPScdhps1-7]{2})".r
 		val more = "([0-9]{1,2})".r
 		val errorMessage = "Invalid Command, press enter to continue"

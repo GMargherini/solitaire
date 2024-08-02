@@ -23,6 +23,18 @@ object Table {
 						case None =>
 		}
 	}
+	def forceMoveCard(card: Card, from: Pile, to: Pile): Unit = {
+		to.getTopCard match
+			case Some(card) => if !card.covered then card.flip()
+			case None =>
+		to.addCard(card)
+		from.removeCard(card)
+	}
+
+	def forceMoveCards(from: Pile, to: Pile, number: Int): Unit = {
+		val cards = from.getCards(number)
+		cards foreach (card => forceMoveCard(card, from, to))
+	}
 
 	def moveCards(from: Pile, to: Pile, number: Int): Unit = {
 		val cards = from.getCards(number)
@@ -41,6 +53,26 @@ object Table {
 			case Some(card) => card.covered
 			case None => false
 	}
+
+	def drawCard(drawPile: DrawPile, uncoveredPile: UncoveredPile): Unit = {
+		drawPile.getTopCard match
+			case Some(card) => moveCard(card, drawPile, uncoveredPile)
+			case None =>
+				if (uncoveredPile.isEmpty) handleError()
+				else {
+					moveCards(uncoveredPile, drawPile)
+					drawPile foreach (card => card.flip())
+				}
+	}
+
+	def unDrawCard(drawPile: DrawPile, uncoveredPile: UncoveredPile): Unit = {
+		uncoveredPile.getTopCard match
+			case Some(card) => forceMoveCard(card, uncoveredPile, drawPile)
+				drawPile.flipTopCard()
+			case None =>
+				moveCards(drawPile, uncoveredPile)
+				uncoveredPile foreach (card => card.flip())
+	}
 }
 
 class Table {
@@ -52,17 +84,6 @@ class Table {
 	Suit.values foreach (suit => suitPiles = suitPiles + (suit -> new SuitPile(suit)))
 	var drawPile: DrawPile = new DrawPile(deck.getCards(deck.getDeckSize))
 	var uncoveredPile: UncoveredPile = new UncoveredPile
-
-	def drawCard(): Unit = {
-		drawPile.getTopCard match
-			case Some(card) => moveCard(card, drawPile, uncoveredPile)
-			case None =>
-				if (uncoveredPile.isEmpty) handleError()
-				else {
-					moveCards(uncoveredPile, drawPile)
-					drawPile foreach (card => card.flip())
-				}
-	}
 
 	def getLane(laneNumber: Int): Lane = lanes(laneNumber)
 

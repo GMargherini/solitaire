@@ -17,7 +17,7 @@ abstract class Pile extends Iterable[Card] {
 	}
 
 	def addCard(card: Card): Unit = {
-		if (isCardValid(card)) cards = cards :+ card
+		cards = cards :+ card
 	}
 	def getCards(number: Int):Seq[Card] = {
 		cards.takeRight(number)

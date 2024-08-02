@@ -1,9 +1,10 @@
 package patience.core
 
 import patience.core.Game.{isMoveValid, updateScore}
-import patience.core.Table.{moveCard, moveCards}
+import patience.core.Input.handleError
+import patience.core.Table.{forceMoveCard, forceMoveCards, moveCard, moveCards, unDrawCard}
 import patience.deck.*
-import patience.piles.*
+import patience.piles.{Pile, *}
 
 
 object Game {
@@ -65,7 +66,45 @@ class Game {
 		isValid
 	}
 
-	def parseMove(move: String): Unit = {
+	private def forceMove(number: Int, from: Pile, to: Pile): Unit = {
+		if number == 1 then
+			forceMoveCard(from.getTopCard.get, from, to) else forceMoveCards(from, to, number)
+	}
+
+	private def undo(): Unit = {
+		val moveNumber = moves - 1
+		val move = history.lastMove(moveNumber)
+		val tuple = parseMove(move)
+		tuple match
+			case (0, null, null) =>
+				if move == "D" then
+					unDrawCard(table.drawPile,table.uncoveredPile)
+					moves -= 1
+				else handleError(s"Cannot undo move $move")
+			case (n, f, t) => forceMove(n, t, f)
+				moves -= 1
+		history.delete(moveNumber)
+	}
+
+	def runMove(move:String): Unit = {
+		val tuple = parseMove(move)
+		tuple match
+			case (0, null, null) => move match
+				case "D" =>
+					Table.drawCard(table.drawPile,table.uncoveredPile)
+					moves += 1
+				case "Q" =>
+					Output.clearScreen()
+					sys.exit(0)
+				case "L" => Output.printHistory(history)
+				case "H" => Output.printHelp()
+				case "U" => undo()
+				case _ => Input.handleError()
+			case (1, from: Lane, to: Lane) => autoMove(from, to)
+			case (_, _, _) => this.move.tupled(tuple)
+	}
+
+	private def parseMove(move: String): (Int, Pile, Pile) = {
 		history.record(moves,move)
 
 		var piles = List[Pile]()
@@ -98,18 +137,10 @@ class Game {
 		}
 		piles match
 			case first :: second :: tail => (first, second) match
-				case (from:Lane, to: Lane) => if (number == 1) autoMove(from, to) else this.move(number, from, to)
-				case (from:Lane, to:Pile) => this.move(number, from, to)
-				case (from:Pile, to:Pile) => this.move(number, from, to)
-			case _ => move match
-				case "D" => table.drawCard()
-					moves += 1
-				case "Q" =>
-					Output.clearScreen()
-					sys.exit(0)
-				case "L" => Output.printHistory(history)
-				case "H" => Output.printHelp()
-				case _ => Input.handleError()
+				case (from:Lane, to: Lane) => if (number == 1) (1, from, to) else (number, from, to)
+				case (from:Lane, to:Pile) => (number, from, to)
+				case (from:Pile, to:Pile) => (number, from, to)
+			case _ => (0, null, null)
 	}
 
 	def gameOver: Boolean = {
