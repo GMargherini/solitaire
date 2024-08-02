@@ -1,2 +1,2 @@
-rootProject.name = 'patience'
+rootProject.name = 'solitaire'
 include('app')

@@ -7,27 +7,24 @@ object Output {
 	val RED_TEXT: String = RED
 	val WHITE_TEXT: String = WHITE
 	def printTable(table: Table): Unit = {
-		var lines = 0
-		//find the longest lane
-		lines = table.lanes.max((l1, l2) => l1.size.compareTo(l2.size)).size
-		//print labels
-		out.println(WHITE_TEXT + "\t P\t\t C\t D\t H\t S")
+		printWhite("\t P\t\t C\u2663\t D\u2666\t H\u2665\t S\u2660\n")
 		out.print(s"${table.drawPile}\t${table.uncoveredPile}\t\t")
 		table.suitPiles foreach ((_, pile) => out.print(s"$pile\t"))
-
 		out.print("\n\n ")
-		//print lane labels
-		table.lanes.indices foreach (i=>out.print(WHITE_TEXT + (i + 1) + "\t "))
+
+		table.lanes.indices foreach (i=>printWhite(s"${i + 1}\t "))
 		out.println()
-		//print lanes
-		(0 until lines).foreach(i => {
-			table.lanes.foreach(lane => out.print("" +
-				(lane.getCard(i) match
+
+		val lines = table.lanes.max((l1, l2) => l1.size.compareTo(l2.size)).size
+		for(i <- 0 until lines){
+			for(lane <- table.lanes){
+				val card = lane.getCard(i) match
 					case Some(c) => s"$c\t"
-					case None => "\t")
-				+ ""))
+					case None => "\t"
+				out.print(s"$card")
+			}
 			out.println()
-		})
+		}
 	}
 
 	def printWhite(string: String): Unit = {
@@ -70,7 +67,7 @@ object Input{
 		checkCommand(command)(handleError)
 	}
 
-	def checkCommand(command: String)(el: String => String): String = {
+	def checkCommand(command: String)(er: String => String): String = {
 		val one = "([DHLQdhlq])".r
 		val two = "([CDHPScdhps1-7]{2})".r
 		val more = "([0-9]{1,2})".r
@@ -80,11 +77,11 @@ object Input{
 			case 1 | 2 => command match
 				case one(c) => c
 				case two(c) => c
-				case _ => el(errorMessage)
+				case _ => er(errorMessage)
 			case 3 | 4 => command.substring(2) match
 				case more(c) => command.substring(0, 3)
-				case _ => el(errorMessage)
-			case _ => el(errorMessage)).toUpperCase
+				case _ => er(errorMessage)
+			case _ => er(errorMessage)).toUpperCase
 	}
 
 	def handleError(message: String): String = {

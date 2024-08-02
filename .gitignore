@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/app/build/
+/app/out/
+/gradle/
+/gradlew*
+/.gradle/
+/.idea/

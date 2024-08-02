@@ -115,4 +115,9 @@ class Game {
 	def gameOver: Boolean = {
 		table.suitPiles.values.map(pile => pile.size == 13).fold(true)((x,y) => x & y)
 	}
+
+	override def toString: String = {
+		Output.clearScreen()
+		s"score: $score\tmoves: $moves\n"
+	}
 }
