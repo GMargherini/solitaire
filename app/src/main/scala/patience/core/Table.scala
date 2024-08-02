@@ -1,7 +1,6 @@
 package patience.core
 
 import patience.core.Input.handleError
-import patience.core.Table.{moveCard, moveCards}
 import patience.deck.*
 import patience.piles.*
 

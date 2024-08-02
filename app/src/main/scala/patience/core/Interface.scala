@@ -53,8 +53,9 @@ object Output {
 		  | [Pile1][Pile2]		Automatically move cards from Pile1 to Pile2
 		  | [Pile1][Pile2][n]	Move n cards from Pile1 to Pile2
 		  | D					Draw a card from the uncovered pile
+		  | U					Undo last move
 		  |
-		  | Pile can be any between 1-7,P,C,D,H,S
+		  | Pile can be any between 1-7, P, C, D, H, S
 		  |""".stripMargin)
 		Input.handleError("Press enter to continue")
 	}
