@@ -27,14 +27,14 @@ object Game {
 
 		val movedCard = to.getCard(to.size - number).get
 		(from,to) match
-			case (_:Lane, _:SuitPile) => score + 20
-			case (_:UncoveredPile, _:SuitPile) => score + 10
-			case (_, _:SuitPile) => score
+			case (_:Lane, _:SuitPile) => 20
+			case (_:UncoveredPile, _:SuitPile) => 10
+			case (_, _:SuitPile) => 0
 			case (_:Lane, _:Lane) =>
 				if movingBetweenLanes(wasCovered, movedCard, to.getCard(to.size - number - 1), from.getTopCard)
-				then score
-				else score + (5 * number)
-			case (_,_) => score + (5 * number)
+				then 0
+				else 5 * number
+			case (_,_) => 5 * number
 	}
 }
 
@@ -60,7 +60,9 @@ class Game {
 			val wasCovered = Table.wasCovered(number, from, to)
 			if number == 1 then
 				moveCard(from.getTopCard.get, from, to) else moveCards(from, to, number)
-			score = updateScore(score, number, from, to, wasCovered)
+			val addedScore = updateScore(score, number, from, to, wasCovered)
+			score += addedScore
+			history.updateScore(moves, addedScore)
 			moves += 1
 		}
 		isValid
@@ -83,6 +85,7 @@ class Game {
 				else handleError(s"Cannot undo move $move")
 			case (n, f, t) => forceMove(n, t, f)
 				moves -= 1
+				score -= history.lastScore(moveNumber)
 		history.delete(moveNumber)
 	}
 
@@ -105,7 +108,7 @@ class Game {
 	}
 
 	private def parseMove(move: String): (Int, Pile, Pile) = {
-		history.record(moves,move)
+		history.record(moves,move,0)
 
 		var piles = List[Pile]()
 		val fromTo = move.length match {

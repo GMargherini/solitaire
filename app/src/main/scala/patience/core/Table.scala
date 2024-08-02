@@ -29,6 +29,9 @@ object Table {
 			case None =>
 		to.addCard(card)
 		from.removeCard(card)
+		to match
+			case _: UncoveredPile => if card.covered then card.flip()
+			case _ =>
 	}
 
 	def forceMoveCards(from: Pile, to: Pile, number: Int): Unit = {
