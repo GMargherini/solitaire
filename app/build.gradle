@@ -28,6 +28,10 @@ jar {
      }
 }
 
+run {
+	standardInput = System.in
+}
+
 test {
      useJUnitPlatform {
           includeEngines 'scalatest'

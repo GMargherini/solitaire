@@ -72,8 +72,12 @@ object Table {
 			case Some(card) => forceMoveCard(card, uncoveredPile, drawPile)
 				drawPile.flipTopCard()
 			case None =>
-				moveCards(drawPile, uncoveredPile)
-				uncoveredPile foreach (card => card.flip())
+				drawPile.getTopCard match
+					case Some(card) =>{ 
+						moveCards(drawPile, uncoveredPile)
+						//uncoveredPile foreach (card => card.flip())
+					}
+					case None =>
 	}
 }
 

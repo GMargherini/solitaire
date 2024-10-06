@@ -70,7 +70,8 @@ class Game {
 
 	private def forceMove(number: Int, from: Pile, to: Pile): Unit = {
 		if number == 1 then
-			forceMoveCard(from.getTopCard.get, from, to) else forceMoveCards(from, to, number)
+			forceMoveCard(from.getTopCard.get, from, to) 
+		else forceMoveCards(from, to, number)
 	}
 
 	private def undo(): Unit = {
